@@ -1,9 +1,9 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from services import postSeller as ps
 from services import postBuyer as pb
 from services import postPost as pp
-from services import getPost as gp
+from services import fetchFood as ff
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -40,14 +40,10 @@ def create_post_route():
     status = req.get('status')
     return pp.postPost(restaurant_id, food_name, item_quantity, claimer, status)
 
-@app.route('/api/getPosts', methods=['GET'])
-def get_posts_route():
-    restaurant_id = request.args.get('restaurant_id')
-    if restaurant_id:
-        posts = gp.getPost(restaurant_id)
-        return posts
-    else:
-        return 'Missing restaurant_id parameter'
+@app.route('/api/fetchRestaurants', methods=['GET'])
+def fetchRestaurants():
+    restaurants_data = ff.fetchFood()
+    return jsonify(restaurants_data)
 
 # # main driver function
 if __name__ == '__main__':
