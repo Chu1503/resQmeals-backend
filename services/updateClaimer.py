@@ -2,6 +2,7 @@ import pyrebase
 import os
 from dotenv import load_dotenv
 import datetime
+import uuid
 
 load_dotenv()
 
@@ -20,22 +21,6 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 db = firebase.database()
 
-def unix_time():
-    presentDate = datetime.datetime.now()
-    unix_timestamp = datetime.datetime.timestamp(presentDate)*1000
-    round_unix_time = round(unix_timestamp)
-    return str(round_unix_time)
-
-def postUser(buyer_name, buyer_address, buyer_contact_number):
-    unix_time_stamp = unix_time()
-
-    buyer_id = buyer_name.lower().replace(' ', '_') + '_' + unix_time_stamp
-
-    data = {
-        'buyer_address': buyer_address,
-        'buyer_contact_number': buyer_contact_number,
-    }
-
-    db.child('users').child(buyer_id).set(data)
-
-    return buyer_id
+def updateClaimer(post_id, claimer, restaurant_id):
+    db.child('restaurants').child(restaurant_id).child('posts').child(post_id).child('claimer').set(claimer)
+    return "Claimer updated successfully"

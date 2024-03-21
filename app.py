@@ -4,6 +4,7 @@ from services import postSeller as ps
 from services import postBuyer as pb
 from services import postPost as pp
 from services import fetchFood as ff
+from services import updateClaimer as uc
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -44,6 +45,15 @@ def create_post_route():
 def fetchRestaurants():
     restaurants_data = ff.fetchFood()
     return jsonify(restaurants_data)
+
+@app.route('/api/updateClaimer', methods=['POST'])
+def update_claimer():
+    data = request.get_json()
+    post_id = data.get('post_id')
+    claimer = data.get('claimer')
+    restaurant_id = data.get('restaurant_id')
+
+    return uc.updateClaimer(post_id, claimer, restaurant_id)
 
 # # main driver function
 if __name__ == '__main__':

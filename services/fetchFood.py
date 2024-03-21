@@ -29,17 +29,16 @@ def fetchFood():
             if 'posts' in restaurant_data:
                 for post_id, post_data in restaurant_data['posts'].items():
                     food_item = post_data.get('food')
+                    claimer = post_data.get('claimer')
                     if food_item and isinstance(food_item, dict):
                         food_type = food_item.get('name', '')
                         quantity = food_item.get('quantity', '')
                         restaurant_details = {
                             'restaurant_name': restaurant_name,
                             'food_type': food_type,
-                            'quantity': quantity
+                            'quantity': quantity,
+                            'claimer': claimer
                         }
                         restaurants.append(restaurant_details)
 
     return restaurants
-
-
-print(fetchFood)
