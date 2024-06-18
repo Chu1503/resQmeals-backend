@@ -5,6 +5,7 @@ from services import postBuyer as pb
 from services import postPost as pp
 from services import fetchFood as ff
 from services import updateClaimer as uc
+from services import fetchAddress as fa
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -54,6 +55,20 @@ def update_claimer():
     restaurant_id = data.get('restaurant_id')
 
     return uc.updateClaimer(post_id, claimer, restaurant_id)
+
+
+@app.route('/api/fetchAddress', methods=['GET'])
+def handle_fetch_address_by_claimer():
+    claimer = request.args.get('claimer')
+    if not claimer:
+        return jsonify({'error': 'Claimer ID is required.'}), 400
+
+    address_pairs = fa.fetchAddress(claimer)
+    if not address_pairs:
+        return jsonify({'error': 'No matching addresses found for the claimer.'}), 404
+
+    return jsonify({'address_pairs': address_pairs})
+
 
 # # main driver function
 if __name__ == '__main__':
